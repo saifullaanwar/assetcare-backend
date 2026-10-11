@@ -1,6 +1,6 @@
 # AssetCare - Backend API System
 
-Sistem Manajemen & Perawatan Aset Perusahaan berbasis Laravel 11 dengan autentikasi API (Laravel Sanctum), pengingat servis berkala otomatis, dan analisis statistik pengeluaran.
+Sistem Manajemen & Perawatan Aset Perusahaan berbasis Laravel 12 dengan autentikasi API (Laravel Sanctum), pengingat servis berkala otomatis, dan analisis statistik pengeluaran.
 
 ## 🚀 Fitur Utama
 
@@ -14,8 +14,8 @@ Sistem Manajemen & Perawatan Aset Perusahaan berbasis Laravel 11 dengan autentik
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Laravel 11
-- **Database:** MySQL
+- **Framework:** Laravel 12
+- **Database:** PostgreSQL
 - **Authentication:** Laravel Sanctum
 - **Notification Driver:** Log Driver (`MAIL_MAILER=log`)
 
@@ -24,7 +24,7 @@ Sistem Manajemen & Perawatan Aset Perusahaan berbasis Laravel 11 dengan autentik
 ## ⚙️ Panduan Instalasi & Jalankan Backend
 
 1. **Setup Environment:**
-   Pastikan file `.env` sudah terkonfigurasi dengan database MySQL kamu.
+   Pastikan file `.env` sudah terkonfigurasi dengan database PostgreSQL kamu.
 2. **Install Dependencies & Generate Key:**
    ```bash
    composer install
