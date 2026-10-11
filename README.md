@@ -1,59 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AssetCare - Backend API System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Manajemen & Perawatan Aset Perusahaan berbasis Laravel 11 dengan autentikasi API (Laravel Sanctum), pengingat servis berkala otomatis, dan analisis statistik pengeluaran.
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **F1 - Autentikasi & Proteksi Akun:** Register, Login, Logout, dan User Info (`/me`) berbasis Token Bearer (Sanctum).
+- **F2 - Kelola Kategori, Lokasi & Perangkat (Asset CRUD):** Manajemen Master Data kategori, lokasi gedung, serta inventaris aset/kendaraan lengkap dengan nomor seri/plat.
+- **F3 - Pencatatan Riwayat Servis:** Logging data perawatan, detail tindakan, teknisi, dan biaya servis.
+- **F4 - Indikator & Pengingat Servis Berkala:** Notifikasi otomatis via email log untuk jadwal servis H-3 dan Hari-H melalui Task Scheduler.
+- **F5 - Dasbor Ringkasan Pengeluaran:** Ringkasan statistik total aset, sebaran status, total pengeluaran, serta breakdown biaya per kategori.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Tech Stack
 
-## Learning Laravel
+- **Framework:** Laravel 11
+- **Database:** MySQL
+- **Authentication:** Laravel Sanctum
+- **Notification Driver:** Log Driver (`MAIL_MAILER=log`)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Panduan Instalasi & Jalankan Backend
 
-## Laravel Sponsors
+1. **Setup Environment:**
+   Pastikan file `.env` sudah terkonfigurasi dengan database MySQL kamu.
+2. **Install Dependencies & Generate Key:**
+   ```bash
+   composer install
+   php artisan key:generate
+   ```
+3. **Jalankan Database Migration:**
+   ```bash
+   php artisan migrate
+   ```
+4. **Jalankan Development Server:**
+   ```bash
+   php artisan serve
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ⏰ Menjalankan Fitur Pengingat Service (F4)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Untuk menguji pengiriman notifikasi pengingat service secara manual, jalankan perintah:
+```bash
+php artisan app:send-service-reminder
+```
+*Hasil draf email notifikasi akan otomatis tercatat pada file `storage/logs/laravel.log`.*
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📡 Ringkasan Endpoint API
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Modul | Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- | :--- |
+| **Auth** | `POST` | `/api/register` | Registrasi user baru |
+| **Auth** | `POST` | `/api/login` | Login & dapatkan Bearer Token |
+| **Auth** | `GET` | `/api/me` | Cek info user aktif |
+| **Auth** | `POST` | `/api/logout` | Revoke token / Logout |
+| **Categories** | `GET/POST/PUT/DELETE` | `/api/categories` | CRUD Master Data Kategori |
+| **Locations** | `GET/POST/PUT/DELETE` | `/api/locations` | CRUD Master Data Lokasi |
+| **Assets** | `GET/POST/PUT/DELETE` | `/api/assets` | CRUD Data Aset & Perangkat |
+| **Maintenances** | `GET/POST/PUT/DELETE` | `/api/maintenances` | CRUD Log Riwayat Perawatan |
+| **Dashboard** | `GET` | `/api/dashboard` | API Summary Analytics & Agregasi |
