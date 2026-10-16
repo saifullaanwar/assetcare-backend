@@ -43,7 +43,10 @@ class DashboardController extends Controller
             'status' => 'success',
             'data'   => [
                 'total_assets'           => $totalAssets,
-                'assets_by_status'       => $assetsByStatus,
+                'available_assets'       => $assetsByStatus['available'],
+                'in_use_assets'          => $assetsByStatus['in_use'],
+                'maintenance_assets'     => $assetsByStatus['maintenance'],
+                'disposed_assets'        => $assetsByStatus['disposed'],
                 'total_maintenance_cost' => (float) $totalMaintenanceCost,
                 'cost_per_category'      => $costPerCategory,
                 'recent_maintenances'    => $recentMaintenances,

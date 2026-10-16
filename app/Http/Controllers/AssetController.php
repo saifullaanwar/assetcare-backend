@@ -2,15 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAssetRequest;
+use App\Http\Requests\UpdateAssetRequest;
 use App\Models\Asset;
 use Illuminate\Http\Request;
 
 class AssetController extends Controller
 {
-    // GET /api/assets (Tampilkan semua aset beserta relasi kategori & lokasi)
-    public function index()
+    // GET /api/assets (Tampilkan semua aset + search & filter)
+    public function index(Request $request)
     {
-        $assets = Asset::with(['category', 'location'])->latest()->get();
+        $query = Asset::with(['category', 'location']);
+
+        // Search berdasarkan nama atau nomor seri
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('serial_number', 'ilike', "%{$search}%")
+                  ->orWhere('asset_code', 'ilike', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan kategori
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter berdasarkan lokasi
+        if ($request->filled('location_id')) {
+            $query->where('location_id', $request->location_id);
+        }
+
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $assets = $query->latest()->get();
 
         return response()->json([
             'status' => 'success',
@@ -19,21 +48,9 @@ class AssetController extends Controller
     }
 
     // POST /api/assets (Tambah aset baru)
-    public function store(Request $request)
+    public function store(StoreAssetRequest $request)
     {
-        $validated = $request->validate([
-            'category_id'   => 'required|exists:categories,id',
-            'location_id'   => 'required|exists:locations,id',
-            'name'          => 'required|string|max:255',
-            'asset_code'    => 'required|string|max:50|unique:assets,asset_code',
-            'serial_number' => 'nullable|string|max:255',
-            'status'        => 'required|in:available,in_use,maintenance,disposed',
-            'purchase_date' => 'nullable|date',
-            'purchase_cost' => 'nullable|numeric',
-            'notes'         => 'nullable|string',
-        ]);
-
-        $asset = Asset::create($validated);
+        $asset = Asset::create($request->validated());
         $asset->load(['category', 'location']);
 
         return response()->json([
@@ -56,7 +73,7 @@ class AssetController extends Controller
     }
 
     // PUT /api/assets/{id} (Update data aset)
-    public function update(Request $request, $id)
+    public function update(UpdateAssetRequest $request, $id)
     {
         $asset = Asset::find($id);
 
@@ -64,19 +81,7 @@ class AssetController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Aset tidak ditemukan'], 404);
         }
 
-        $validated = $request->validate([
-            'category_id'   => 'required|exists:categories,id',
-            'location_id'   => 'required|exists:locations,id',
-            'name'          => 'required|string|max:255',
-            'asset_code'    => 'required|string|max:50|unique:assets,asset_code,' . $id,
-            'serial_number' => 'nullable|string|max:255',
-            'status'        => 'required|in:available,in_use,maintenance,disposed',
-            'purchase_date' => 'nullable|date',
-            'purchase_cost' => 'nullable|numeric',
-            'notes'         => 'nullable|string',
-        ]);
-
-        $asset->update($validated);
+        $asset->update($request->validated());
         $asset->load(['category', 'location']);
 
         return response()->json([
