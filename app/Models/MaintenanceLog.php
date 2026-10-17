@@ -17,6 +17,8 @@ class MaintenanceLog extends Model
         'cost',
         'status',
         'performed_by',
+        'service_location',
+        'parts_replaced',
         'notes',
     ];
 

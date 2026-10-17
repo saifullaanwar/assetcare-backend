@@ -51,6 +51,8 @@ class MaintenanceLogController extends Controller
             'cost'              => 'nullable|numeric|min:0',
             'status'            => 'required|in:scheduled,in_progress,completed,cancelled',
             'performed_by'      => 'nullable|string|max:255',
+            'service_location'  => 'nullable|string|max:255',
+            'parts_replaced'    => 'nullable|string',
             'notes'             => 'nullable|string',
         ]);
 
@@ -97,6 +99,8 @@ class MaintenanceLogController extends Controller
             'cost'              => 'nullable|numeric|min:0',
             'status'            => 'required|in:scheduled,in_progress,completed,cancelled',
             'performed_by'      => 'nullable|string|max:255',
+            'service_location'  => 'nullable|string|max:255',
+            'parts_replaced'    => 'nullable|string',
             'notes'             => 'nullable|string',
         ]);
 
