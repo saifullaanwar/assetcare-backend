@@ -50,7 +50,14 @@ class AssetController extends Controller
     // POST /api/assets (Tambah aset baru)
     public function store(StoreAssetRequest $request)
     {
-        $asset = Asset::create($request->validated());
+        $validated = $request->validated();
+
+        // Auto-generate asset_code jika tidak dikirim dari frontend
+        if (empty($validated['asset_code'])) {
+            $validated['asset_code'] = $this->generateAssetCode($validated['category_id']);
+        }
+
+        $asset = Asset::create($validated);
         $asset->load(['category', 'location']);
 
         return response()->json([
@@ -58,6 +65,16 @@ class AssetController extends Controller
             'message' => 'Aset berhasil ditambahkan',
             'data'    => $asset,
         ], 201);
+    }
+
+    // Generate kode aset otomatis: AST-{KODE_KATEGORI}-{nomor urut 3 digit}
+    private function generateAssetCode(int $categoryId): string
+    {
+        $category = \App\Models\Category::find($categoryId);
+        $prefix   = $category ? strtoupper($category->code) : 'GEN';
+        $count    = Asset::where('category_id', $categoryId)->count() + 1;
+
+        return 'AST-' . $prefix . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
     }
 
     // GET /api/assets/{id} (Lihat detail aset)

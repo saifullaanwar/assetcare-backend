@@ -17,7 +17,7 @@ class StoreAssetRequest extends FormRequest
             'category_id'   => 'required|exists:categories,id',
             'location_id'   => 'required|exists:locations,id',
             'name'          => 'required|string|max:255',
-            'asset_code'    => 'required|string|max:50|unique:assets,asset_code',
+            'asset_code'    => 'nullable|string|max:50|unique:assets,asset_code',
             'serial_number' => 'nullable|string|max:255',
             'status'        => 'required|in:available,in_use,maintenance,disposed',
             'purchase_date' => 'nullable|date',
